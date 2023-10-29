@@ -6,7 +6,6 @@ public class ConsoleSystem {
     private final Scanner scanner = new Scanner(System.in);
     private Hotel rooms;
     private List<User> users;
-    private UserSystem userSystem;
     private String userFilePath = "src/users.txt";  // Update with the correct path if necessary
 
     public ConsoleSystem(Hotel rooms, List<User> users) throws IOException {
@@ -43,9 +42,7 @@ public class ConsoleSystem {
                     }
                     break;
                 case 2:
-//                    register();
                     User user1 = register();
-
                     if (user1 != null) {
                         return user1;
                     }
@@ -74,14 +71,11 @@ public class ConsoleSystem {
                     return;
                 case 2:
                     bookRoom();
-//                    saveTxt();
                     return;
                 case 3:
                     cancelBooking();
-//                    saveTxt();
                     return;
                 case 4:
-//                    saveTxt();
                     System.out.println("Thank you!");
                     System.exit(0);
                 default:
@@ -105,7 +99,6 @@ public class ConsoleSystem {
             System.out.println("Successfully wrote to the file.");
         } catch (IOException e) {
             System.out.println("An error occurred while writing to the file.");
-            e.printStackTrace();
         }
     }
 
@@ -116,7 +109,6 @@ public class ConsoleSystem {
                 System.out.println(room.roomNumber);
             }
         }
-        menu();
     }
 
     private void bookRoom() {
@@ -166,23 +158,17 @@ public class ConsoleSystem {
         String email = scanner.nextLine();
         System.out.println("Enter desired password: ");
         String password = scanner.nextLine();
-
-//        int uniqueID = FileHandler.generateUniqueID(users);
         User newUser = new User(email, password);
         users.add(newUser);
-//        FileHandler.saveUserToCSV(newUser, userFilePath);
         try (FileOutputStream fos = new FileOutputStream(userFilePath, true);
              OutputStreamWriter osw = new OutputStreamWriter(fos);
              BufferedWriter bw = new BufferedWriter(osw);
              PrintWriter out = new PrintWriter(bw)) {
-
             out.write("\n"); // new line in csv
             out.print(email + " " + password + ",");
-
         }
         System.out.println("Registration successful!");
         return newUser;
-
     }
 }
 
