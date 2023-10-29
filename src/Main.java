@@ -13,13 +13,10 @@ import java.util.logging.FileHandler;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        Path inPath = Paths.get("/Users/macbook/IdeaProjects/Hotel/src/info.txt");
         List<Room> rooms = new ArrayList<>();
         List<User> users = new ArrayList<>();
-
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("src/info.txt")))) {
             String line;
-
             while ((line = br.readLine()) != null) {
                 String[] lines = line.split(",");
                 String[] values = lines[0].split(" ");
@@ -31,11 +28,8 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("src/users.txt")))) {
             String line;
-
             while ((line = br.readLine()) != null) {
                 String[] lines = line.split(",");
                 String[] values = lines[0].split(" ");
@@ -46,14 +40,8 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        ConsoleSystem consoleSystem = new ConsoleSystem(new Hotel(rooms), new User(users));
-        UserSystem userSystem = new UserSystem(new User(users));
-
+        ConsoleSystem consoleSystem = new ConsoleSystem(new Hotel(rooms), users);
         consoleSystem.start();
-
     }
 }
 
-//emine-99@mail.ru 123123,
-//        emineshaban@icloud.com qweqwe,
-//        emine19997@gmail.com 987987,

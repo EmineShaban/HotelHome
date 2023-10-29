@@ -1,65 +1,91 @@
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleSystem {
     private final Scanner scanner = new Scanner(System.in);
     private Hotel rooms;
+    private List<User> users;
     private UserSystem userSystem;
-private User users;
-    public ConsoleSystem(Hotel rooms, User users) throws IOException {
+    private String userFilePath = "src/users.txt";  // Update with the correct path if necessary
+
+    public ConsoleSystem(Hotel rooms, List<User> users) throws IOException {
         this.rooms = rooms;
-        this.userSystem = new UserSystem(users);
+        this.users = users;
     }
 
-    public void start() {
+    public void start() throws IOException {
         System.out.println("Welcome to our Hotel Emine");
-        System.out.println("Please, choose 1 or 2");
-        System.out.println("1. Login");
-        System.out.println("2. Registration");
-        int choice = scanner.nextInt();
-        scanner.nextLine();
-        switch (choice) {
-            case 1:
-                User user = userSystem.login();
-
-                return;
-            case 2:
-                registration();
-                return;
-            default:
-                System.out.println("Something going wrong! Choose 1 or 2!");
-
+        User loggedInUser = loginOrRegister();
+        if (loggedInUser != null) {
+            while (true) {
+                menu();
+                saveTxt();
+            }
+        } else {
+            System.out.println("Thank you!");
         }
+    }
 
-//        menu();
+    public User loginOrRegister() throws IOException {
+        while (true) {
+            System.out.println("Please, choose 1 or 2 or 3");
+            System.out.println("1. Login");
+            System.out.println("2. Registration");
+            System.out.println("3. Exit");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+            switch (choice) {
+                case 1:
+                    User user = login();
+                    if (user != null) {
+                        return user;
+                    }
+                    break;
+                case 2:
+//                    register();
+                    User user1 = register();
 
+                    if (user1 != null) {
+                        return user1;
+                    }
+                    break;
+                case 3:
+                    return null;
+                default:
+                    System.out.println("Something going wrong! Choose 1 or 2!");
+                    return null;
+            }
+        }
     }
 
     private void menu() {
         while (true) {
-            System.out.println("Please, choose 1, 2 or 3");
+            System.out.println("Please, choose 1, 2 or 3, 4");
             System.out.println("1. View Rooms");
             System.out.println("2. Book a Room");
             System.out.println("3. Cancel Booking");
-
+            System.out.println("4. Exit");
             int choice = scanner.nextInt();
-            scanner.nextLine();  // Consume the newline
-
+            scanner.nextLine();
             switch (choice) {
                 case 1:
                     viewFreeRooms();
                     return;
                 case 2:
                     bookRoom();
-                    saveTxt();
+//                    saveTxt();
                     return;
                 case 3:
                     cancelBooking();
-                    saveTxt();
+//                    saveTxt();
                     return;
+                case 4:
+//                    saveTxt();
+                    System.out.println("Thank you!");
+                    System.exit(0);
                 default:
-                    System.out.println("Something going wrong! Choose 1, 2 or 3!");
+                    System.out.println("Something going wrong! Choose 1, 2 or 3, 4!");
 
             }
         }
@@ -86,7 +112,6 @@ private User users;
     private void viewFreeRooms() {
         System.out.println("\nAvailable Rooms:");
         for (Room room : rooms.getRooms()) {
-//            System.out.println(room);
             if ("available".equalsIgnoreCase(room.getStatus())) {
                 System.out.println(room.roomNumber);
             }
@@ -98,7 +123,6 @@ private User users;
         System.out.println("Enter the room number you want to book:");
         int roomNumber = scanner.nextInt();
         Room room = rooms.getRoom(roomNumber);
-
         if (room != null && "available".equalsIgnoreCase(room.getStatus())) {
             room.setStatus("Booked");
             System.out.println("Room booked successfully!");
@@ -112,22 +136,52 @@ private User users;
         System.out.println("Please write the number of room which you want to cancel:");
         int roomNumber = scanner.nextInt();
         Room room = rooms.getRoom(roomNumber);
-
         if (room != null && "booked".equalsIgnoreCase(room.getStatus())) {
             room.setStatus("Available");
             System.out.println("Booking canceled successfully!");
         } else {
             System.out.println("Room is either not booked or doesn't exist.");
         }
-
-
     }
 
-    private void login(){
-
+    private User login() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.println("Enter password: ");
+        String password = scanner.nextLine();
+        for (User user : users) {
+            if (user.getEmail().equals(username) && user.getPassword().equals(password)) {
+                return user;
+            }
+        }
+        System.out.println("Invalid credentials. Please try again.");
+        return null;
     }
 
-    private void registration(){
+
+    public User register() throws IOException {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter desired username: ");
+        String email = scanner.nextLine();
+        System.out.println("Enter desired password: ");
+        String password = scanner.nextLine();
+
+//        int uniqueID = FileHandler.generateUniqueID(users);
+        User newUser = new User(email, password);
+        users.add(newUser);
+//        FileHandler.saveUserToCSV(newUser, userFilePath);
+        try (FileOutputStream fos = new FileOutputStream(userFilePath, true);
+             OutputStreamWriter osw = new OutputStreamWriter(fos);
+             BufferedWriter bw = new BufferedWriter(osw);
+             PrintWriter out = new PrintWriter(bw)) {
+
+            out.write("\n"); // new line in csv
+            out.print(email + " " + password + ",");
+
+        }
+        System.out.println("Registration successful!");
+        return newUser;
 
     }
 }

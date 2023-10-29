@@ -25,15 +25,8 @@ class Room{
     public void setStatus(String newStatus) {
         this.status = newStatus;
     }
-
     @Override
     public String toString() {
         return "Room Number: " + roomNumber + ", Type: " + roomType + ", Status: " + status;
     }
-
-
-//    public getRooms() {
-//        return rooms;
-//    }
-
 }

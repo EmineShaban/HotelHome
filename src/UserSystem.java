@@ -3,9 +3,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class UserSystem {
-    private User users;
-
-    public UserSystem(User users) throws IOException {
+    private List<User> users;
+    public UserSystem(List<User> users) throws IOException {
         this.users = users;
     }
     public User login() {
@@ -14,16 +13,11 @@ public class UserSystem {
         String username = scanner.nextLine();
         System.out.println("Enter password: ");
         String password = scanner.nextLine();
-        System.out.println(users);
-        for (User user : users.) {
-
-            System.out.println(user);
+        for (User user : users) {
             if (user.getEmail().equals(username) && user.getPassword().equals(password)) {
-
                 return user;
             }
         }
-
         System.out.println("Invalid credentials. Please try again.");
         return null;
     }
