@@ -13,52 +13,47 @@ import java.util.logging.FileHandler;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-//        FileHandler.
-        Path inPath = Paths.get("/Users/macbook/IdeaProjects/Hotel/src/info.txt");
-//        Hotel hotel =
+//        Path inPath = Paths.get("/Users/macbook/IdeaProjects/Hotel/src/info.txt");
         List<Room> rooms = new ArrayList<>();
-//        try {
-//            List<String> lines = Files.readAllLines(inPath);
-//
-//            for (int i = 0; i < lines.size(); i++) {
-//                var el = lines.get(i);
-//                String[] e = el.split(" ");
-//                int roomNumber = Integer.parseInt(e[0]);
-//                String type = e[1];
-//                String status = e[2];
-//                rooms.add(new Room(roomNumber, type, status));
-//
-////                rooms.add(new Room(roomNumber, type, status));
-//            }
+        List<User> users = new ArrayList<>();
+
         try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("src/info.txt")))) {
             String line;
-            // skipping the header line of the csv
-//            br.readLine();
 
             while ((line = br.readLine()) != null) {
                 String[] lines = line.split(",");
-               String[] values = lines[0].split(" ");
-//                System.out.println(values);
-//                for (int i = 0; i < values.length; i++) {
-//
-//                }
-//                System.out.println(values[0]);
-
+                String[] values = lines[0].split(" ");
                 int roomNumber = Integer.parseInt(values[0]);
-
                 String type = values[1];
                 String status = values[2];
-
                 rooms.add(new Room(roomNumber, type, status));
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
-        ConsoleSystem consoleSystem = new ConsoleSystem(new Hotel(rooms));
+
+        try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream("src/users.txt")))) {
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] lines = line.split(",");
+                String[] values = lines[0].split(" ");
+                String email = values[0];
+                String password = values[1];
+                users.add(new User(email, password));
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        ConsoleSystem consoleSystem = new ConsoleSystem(new Hotel(rooms), new User(users));
+        UserSystem userSystem = new UserSystem(new User(users));
+
         consoleSystem.start();
 
     }
 }
 
+//emine-99@mail.ru 123123,
+//        emineshaban@icloud.com qweqwe,
+//        emine19997@gmail.com 987987,

@@ -20,4 +20,12 @@ public class Hotel {
         }
         return null;
     }
-}
+//    public Room getAllRooms() {
+//        for (Room room : rooms) {
+//            System.out.println(room);
+//                return room;
+//
+//        }
+//        return null;
+//    }
+    }
